@@ -3,10 +3,7 @@ from ultralytics import YOLO
 
 model = YOLO("yolo26n.pt")
 
-input_path = "datasets/CustomVideos/PeopleWalkingOnStreet-1.mp4"
-output_path = "people_tracking.mp4"
-
-video = cv2.VideoCapture(input_path)
+video = cv2.VideoCapture("archive/Videos/Videos/fall/YOUTUBE_YouTubeCCTV001_fall_51.mp4")
 
 width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))

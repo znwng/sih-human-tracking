@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-IMAGE="zenwing/human-tracking-dev:latest"
+IMAGE="zenwing/human-tracking-model-devenv:latest"
 
 usage() {
 	echo "Usage: ./dev.sh {build|rebuild|run}"

@@ -1,8 +1,9 @@
 FROM ubuntu:24.04
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH"
 
 # ------------------------------------------------------------
 # System dependencies
@@ -51,52 +52,41 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------
-# Oh My Zsh
+# Oh My Zsh + plugins + configuration
 # ------------------------------------------------------------
 
 RUN git clone \
-    --depth=1 \
-    https://github.com/ohmyzsh/ohmyzsh.git \
-    /root/.oh-my-zsh
-
-# ------------------------------------------------------------
-# Zsh plugins
-# ------------------------------------------------------------
-
-RUN git clone \
-    --depth=1 \
-    https://github.com/zsh-users/zsh-autosuggestions.git \
-    /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-
-RUN git clone \
-    --depth=1 \
-    https://github.com/zsh-users/zsh-syntax-highlighting.git \
-    /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
-# ------------------------------------------------------------
-# Zsh configuration
-# ------------------------------------------------------------
-
-RUN printf '%s\n' \
-    'export ZSH="$HOME/.oh-my-zsh"' \
-    'ZSH_THEME=""' \
-    '' \
-    'plugins=(' \
-    '    git' \
-    '    zsh-autosuggestions' \
-    '    zsh-syntax-highlighting' \
-    ')' \
-    '' \
-    'source "$ZSH/oh-my-zsh.sh"' \
-    '' \
-    'autoload -U colors && colors' \
-    'setopt PROMPT_SUBST' \
-    '' \
-    'PROMPT="%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})%{$fg[cyan]%}%n@%m %~%{$reset_color%} "' \
-    '' \
-    "alias l='ls -lah'" \
-    "alias szh='source ~/.zshrc'" \
-    > /root/.zshrc
+        --depth=1 \
+        https://github.com/ohmyzsh/ohmyzsh.git \
+        /root/.oh-my-zsh \
+    && git clone \
+        --depth=1 \
+        https://github.com/zsh-users/zsh-autosuggestions.git \
+        /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
+    && git clone \
+        --depth=1 \
+        https://github.com/zsh-users/zsh-syntax-highlighting.git \
+        /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
+    && printf '%s\n' \
+        'export ZSH="$HOME/.oh-my-zsh"' \
+        'ZSH_THEME=""' \
+        '' \
+        'plugins=(' \
+        '    git' \
+        '    zsh-autosuggestions' \
+        '    zsh-syntax-highlighting' \
+        ')' \
+        '' \
+        'source "$ZSH/oh-my-zsh.sh"' \
+        '' \
+        'autoload -U colors && colors' \
+        'setopt PROMPT_SUBST' \
+        '' \
+        'PROMPT="%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})%{$fg[cyan]%}%n@%m %~%{$reset_color%} "' \
+        '' \
+        "alias l='ls -lah'" \
+        "alias szh='source ~/.zshrc'" \
+        > /root/.zshrc
 
 # ------------------------------------------------------------
 # Python virtual environment
@@ -104,22 +94,14 @@ RUN printf '%s\n' \
 
 RUN python3 -m venv /opt/venv
 
-ENV PATH="/opt/venv/bin:$PATH"
-
 # ------------------------------------------------------------
 # Python dependencies
 # ------------------------------------------------------------
 
+COPY requirements.txt /tmp/requirements.txt
+
 RUN pip install --no-cache-dir \
-    torch \
-    torchvision \
-    torchaudio \
-    opencv-python \
-    ultralytics \
-    black \
-    numpy \
-    tqdm \
-    scikit-learn
+    -r /tmp/requirements.txt
 
 # ------------------------------------------------------------
 # Workspace

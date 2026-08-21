@@ -20,6 +20,7 @@ models/
 # Data
 data/
 datasets/
+archive/
 *.mp4
 *.avi
 *.mov
@@ -28,6 +29,20 @@ datasets/
 # Logs / outputs
 logs/
 outputs/
+output/
+outputvideo/
+checkpoints/
+evidence/
+
+# Local agent and editor state
+.agents/
+.codex/
+
+# Local tracking iterations superseded by the STRIDER VISION MVP entry points
+src/tracking.py
+src/tracking2.py
+src/tracking3.py
+src/tracking4.py
 
 # IDEs
 .idea/
